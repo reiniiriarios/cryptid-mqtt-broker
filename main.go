@@ -38,15 +38,47 @@ func main() {
 		done <- true
 	}()
 
+	authRules := &auth.Ledger{
+		Auth: auth.AuthRules{ // Auth disallows all by default
+			// @todo add actual auth
+			{Username: "cryptid", Password: "public", Allow: true},
+			{Remote: "127.0.0.1:*", Allow: true},
+			{Remote: "localhost:*", Allow: true},
+		},
+		ACL: auth.ACLRules{ // ACL allows all by default
+			{Remote: "127.0.0.1:*"}, // local superuser allow all
+			{
+				Username: "cryptid", Filters: auth.Filters{
+					"test":      auth.ReadWrite,
+					"hello":     auth.ReadWrite,
+					"cryptid/#": auth.ReadWrite,
+					"updates/#": auth.WriteOnly,
+					"status/#":  auth.ReadOnly,
+				},
+			},
+			{
+				// Otherwise, no clients have publishing permissions
+				Filters: auth.Filters{
+					"#":         auth.Deny,
+					"updates/#": auth.Deny,
+					"status/#":  auth.ReadOnly,
+				},
+			},
+		},
+	}
+
 	// Create the new MQTT Server.
 	server := mqtt.New(nil)
-
-	// Allow all connections.
-	_ = server.AddHook(new(auth.AllowHook), nil)
+	err := server.AddHook(new(auth.Hook), &auth.Options{
+		Ledger: authRules,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Create a TCP listener on a standard port.
 	tcp := listeners.NewTCP("t1", MQTT_PORT, nil)
-	err := server.AddListener(tcp)
+	err = server.AddListener(tcp)
 	if err != nil {
 		log.Fatal(err)
 	}
