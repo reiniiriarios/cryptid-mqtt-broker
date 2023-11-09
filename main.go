@@ -44,6 +44,7 @@ func main() {
 			{Username: "cryptid", Password: "public", Allow: true},
 			{Remote: "127.0.0.1:*", Allow: true},
 			{Remote: "localhost:*", Allow: true},
+			{Remote: "172.16.0.*:*", Allow: true},
 		},
 		ACL: auth.ACLRules{ // ACL allows all by default
 			{Remote: "127.0.0.1:*"}, // local superuser allow all
