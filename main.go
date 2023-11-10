@@ -70,7 +70,9 @@ func main() {
 	}
 
 	// Create the new MQTT Server.
-	server := mqtt.New(nil)
+	server := mqtt.New(&mqtt.Options{
+		InlineClient: true,
+	})
 
 	// Set logging.
 	level := new(slog.LevelVar)
@@ -94,12 +96,17 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Run.
 	go func() {
 		err := server.Serve()
 		if err != nil {
 			log.Fatal(err)
 		}
 	}()
+
+	// Direct interactions.
+	go testPublish(server)
+	_ = server.Subscribe("test", 1, testReceive)
 
 	// Run server until interrupted
 	<-done
