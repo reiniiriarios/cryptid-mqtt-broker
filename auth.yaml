@@ -14,12 +14,10 @@ acl:
   - remote: 127.0.0.1:*
   - username: cryptid
     filters:
-      test/#: 3
-      hello/#: 3
-      cryptid/#: 3
-      updates/#: 2
+      test: 3
+      hello: 3
+      display/#: 3
       status/#: 1
   - filters:
       '#': 0
-      updates/#: 0
       status/#: 1

@@ -1,11 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	mqtt "github.com/mochi-mqtt/server/v2"
-	"github.com/mochi-mqtt/server/v2/packets"
 )
 
 func testPublish(s *mqtt.Server) {
@@ -17,13 +15,4 @@ func testPublish(s *mqtt.Server) {
 		}
 		s.Log.Info("issued test message")
 	}
-}
-
-func testReceive(cl *mqtt.Client, sub packets.Subscription, pk packets.Packet) {
-	println(
-		"Inline receive: client="+cl.ID,
-		"sub="+fmt.Sprint(sub.Identifier),
-		"topic="+pk.TopicName,
-		"payload="+string(pk.Payload),
-	)
 }

@@ -19,8 +19,10 @@ type PrettyLogHandler struct {
 	l *log.Logger
 }
 
+const TIMESTAMP_FORMAT = "15:04:05.000"
+
 func (h *PrettyLogHandler) Handle(ctx context.Context, r slog.Record) error {
-	timeStr := r.Time.Format("15:05:05.000")
+	timeStr := r.Time.Format(TIMESTAMP_FORMAT)
 
 	// Level
 	level := r.Level.String()

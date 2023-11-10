@@ -71,9 +71,12 @@ func main() {
 		}
 	}()
 
-	// Direct interactions.
+	// Test direct interactions.
 	go testPublish(server)
-	_ = server.Subscribe("test", 1, testReceive)
+
+	// Display
+	_ = server.Subscribe("display/temperature", 100, receiveDisplayTemperature)
+	_ = server.Subscribe("display/humidity", 100, receiveDisplayHumidity)
 
 	// Run server until interrupted
 	<-done
