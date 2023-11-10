@@ -106,5 +106,6 @@ func main() {
 
 	// Cleanup
 	println()
+	_ = server.Close()
 	println(string(C_R) + "MQTT Broker Closed" + string(C_X))
 }
