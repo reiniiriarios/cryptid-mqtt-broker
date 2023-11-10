@@ -1,0 +1,25 @@
+auth:
+# todo: actual auth
+  - username: cryptid
+    password: public
+    allow: true
+  - remote: 127.0.0.1:*
+    allow: true
+  - remote: localhost:*
+    allow: true
+  - remote: 172.16.0.*:*
+    allow: true
+acl:
+# 0 = deny, 1 = read only, 2 = write only, 3 = read and write
+  - remote: 127.0.0.1:*
+  - username: cryptid
+    filters:
+      test/#: 3
+      hello/#: 3
+      cryptid/#: 3
+      updates/#: 2
+      status/#: 1
+  - filters:
+      '#': 0
+      updates/#: 0
+      status/#: 1

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"log/slog"
 	"os"
@@ -39,36 +40,6 @@ func main() {
 		done <- true
 	}()
 
-	authRules := &auth.Ledger{
-		Auth: auth.AuthRules{ // Auth disallows all by default
-			// @todo add actual auth
-			{Username: "cryptid", Password: "public", Allow: true},
-			{Remote: "127.0.0.1:*", Allow: true},
-			{Remote: "localhost:*", Allow: true},
-			{Remote: "172.16.0.*:*", Allow: true},
-		},
-		ACL: auth.ACLRules{ // ACL allows all by default
-			{Remote: "127.0.0.1:*"}, // local superuser allow all
-			{
-				Username: "cryptid", Filters: auth.Filters{
-					"test":      auth.ReadWrite,
-					"hello":     auth.ReadWrite,
-					"cryptid/#": auth.ReadWrite,
-					"updates/#": auth.WriteOnly,
-					"status/#":  auth.ReadOnly,
-				},
-			},
-			{
-				// Otherwise, no clients have publishing permissions
-				Filters: auth.Filters{
-					"#":         auth.Deny,
-					"updates/#": auth.Deny,
-					"status/#":  auth.ReadOnly,
-				},
-			},
-		},
-	}
-
 	// Create the new MQTT Server.
 	server := mqtt.New(&mqtt.Options{
 		InlineClient: true,
@@ -81,9 +52,17 @@ func main() {
 	}))
 	level.Set(slog.LevelDebug)
 
-	// Add hook.
-	err := server.AddHook(new(auth.Hook), &auth.Options{
-		Ledger: authRules,
+	// Get ledger from yaml file
+	authFilePath := flag.String("path", "auth.yaml", "path to data auth file")
+	flag.Parse()
+	authData, err := os.ReadFile(*authFilePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Add hook with auth options.
+	err = server.AddHook(new(auth.Hook), &auth.Options{
+		Data: authData,
 	})
 	if err != nil {
 		log.Fatal(err)
