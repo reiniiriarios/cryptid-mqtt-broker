@@ -76,7 +76,10 @@ func main() {
 
 	// Display
 	_ = server.Subscribe("display/temperature", 100, receiveDisplayTemperature)
-	_ = server.Subscribe("display/humidity", 100, receiveDisplayHumidity)
+	_ = server.Subscribe("display/humidity", 101, receiveDisplayHumidity)
+
+	// Weather
+	_ = server.Subscribe("weather/temperature", 200, receiveWeatherTemperature)
 
 	// Run server until interrupted
 	<-done

@@ -17,6 +17,7 @@ acl:
       test: 3
       hello: 3
       display/#: 3
+      weather/#: 3
       status/#: 1
   - filters:
       '#': 0
