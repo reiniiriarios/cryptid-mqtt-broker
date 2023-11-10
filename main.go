@@ -15,22 +15,7 @@ import (
 
 const MQTT_PORT = ":1883"
 
-const C_X = "\033[0m"
-const C_R = "\033[31m"
-const C_G = "\033[32m"
-const C_Y = "\033[33m"
-const C_B = "\033[34m"
-const C_P = "\033[35m"
-const C_C = "\033[36m"
-const C_W = "\033[37m"
-
 func main() {
-	println(string(C_G) + "Starting MQTT Broker...")
-	// Display local address
-	ip := GetOutboundIP()
-	println(string(C_P)+"Listening on:", ip.String()+MQTT_PORT)
-	print(string(C_X))
-
 	// Create signals channel to run server until interrupted
 	sigs := make(chan os.Signal, 1)
 	done := make(chan bool, 1)
@@ -46,11 +31,14 @@ func main() {
 	})
 
 	// Set logging.
-	level := new(slog.LevelVar)
-	server.Log = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-		Level: level,
+	server.Log = slog.New(NewPrettyLogHandler(os.Stdout, PrettyLogHandlerOptions{
+		SlogOpts: slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		},
 	}))
-	level.Set(slog.LevelDebug)
+
+	server.Log.Info("Starting MQTT Broker...")
+	server.Log.Info("Listening on: " + GetOutboundIP().String() + MQTT_PORT)
 
 	// Get ledger from yaml file
 	authFilePath := flag.String("path", "auth.yaml", "path to data auth file")
@@ -91,7 +79,7 @@ func main() {
 	<-done
 
 	// Cleanup
-	println()
+	server.Log.Warn("Closing broker...")
 	_ = server.Close()
-	println(string(C_R) + "MQTT Broker Closed" + string(C_X))
+	server.Log.Warn("MQTT Broker Closed")
 }
