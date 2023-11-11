@@ -88,6 +88,7 @@ func main() {
 	<-done
 
 	// Cleanup
+	println()
 	server.Log.Warn("Closing broker...")
 	_ = server.Close()
 	server.Log.Warn("MQTT Broker Closed")
