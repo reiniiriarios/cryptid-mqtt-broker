@@ -80,6 +80,9 @@ func main() {
 
 	// Weather
 	_ = server.Subscribe("weather/temperature", 200, receiveWeatherTemperature)
+	_ = server.Subscribe("weather/feelslike", 200, receiveWeatherFeelsLike)
+	_ = server.Subscribe("weather/humidity", 200, receiveWeatherHumidity)
+	_ = server.Subscribe("weather/condition", 200, receiveWeatherCondition)
 
 	// Run server until interrupted
 	<-done
