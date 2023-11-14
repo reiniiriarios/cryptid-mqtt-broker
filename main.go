@@ -72,15 +72,36 @@ func main() {
 	}()
 
 	// Display
-	_ = server.Subscribe("display/temperature", 100, receiveDisplayTemperature)
-	_ = server.Subscribe("display/humidity", 101, receiveDisplayHumidity)
+	err = server.Subscribe("display/temperature", 100, receiveDisplayTemperature)
+	if err != nil {
+		server.Log.Error(err.Error())
+	}
+	err = server.Subscribe("display/humidity", 101, receiveDisplayHumidity)
+	if err != nil {
+		server.Log.Error(err.Error())
+	}
 
 	// Weather
-	_ = server.Subscribe("weather/temperature", 200, receiveWeatherTemperature)
-	_ = server.Subscribe("weather/feelslike", 201, receiveWeatherFeelsLike)
-	_ = server.Subscribe("weather/humidity", 202, receiveWeatherHumidity)
-	_ = server.Subscribe("weather/condition", 203, receiveWeatherCondition)
-	_ = server.Subscribe("weather/code", 204, receiveWeatherCode)
+	err = server.Subscribe("weather/temperature", 200, receiveWeatherTemperature)
+	if err != nil {
+		server.Log.Error(err.Error())
+	}
+	err = server.Subscribe("weather/feelslike", 201, receiveWeatherFeelsLike)
+	if err != nil {
+		server.Log.Error(err.Error())
+	}
+	err = server.Subscribe("weather/humidity", 202, receiveWeatherHumidity)
+	if err != nil {
+		server.Log.Error(err.Error())
+	}
+	err = server.Subscribe("weather/condition", 203, receiveWeatherCondition)
+	if err != nil {
+		server.Log.Error(err.Error())
+	}
+	err = server.Subscribe("weather/code", 204, receiveWeatherCode)
+	if err != nil {
+		server.Log.Error(err.Error())
+	}
 
 	// Run server until interrupted
 	<-done
