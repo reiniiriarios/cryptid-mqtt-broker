@@ -71,18 +71,16 @@ func main() {
 		}
 	}()
 
-	// Test direct interactions.
-	go testPublish(server)
-
 	// Display
 	_ = server.Subscribe("display/temperature", 100, receiveDisplayTemperature)
 	_ = server.Subscribe("display/humidity", 101, receiveDisplayHumidity)
 
 	// Weather
 	_ = server.Subscribe("weather/temperature", 200, receiveWeatherTemperature)
-	_ = server.Subscribe("weather/feelslike", 200, receiveWeatherFeelsLike)
-	_ = server.Subscribe("weather/humidity", 200, receiveWeatherHumidity)
-	_ = server.Subscribe("weather/condition", 200, receiveWeatherCondition)
+	_ = server.Subscribe("weather/feelslike", 201, receiveWeatherFeelsLike)
+	_ = server.Subscribe("weather/humidity", 202, receiveWeatherHumidity)
+	_ = server.Subscribe("weather/condition", 203, receiveWeatherCondition)
+	_ = server.Subscribe("weather/code", 204, receiveWeatherCode)
 
 	// Run server until interrupted
 	<-done

@@ -52,3 +52,12 @@ func receiveWeatherFeelsLike(cl *mqtt.Client, sub packets.Subscription, pk packe
 func receiveWeatherCondition(cl *mqtt.Client, sub packets.Subscription, pk packets.Packet) {
 	logReceipt("The current condition is: " + string(pk.Payload))
 }
+
+func receiveWeatherCode(cl *mqtt.Client, sub packets.Subscription, pk packets.Packet) {
+	code, err := strconv.ParseInt(string(pk.Payload), 10, 16)
+	if err != nil {
+		receiveError(pk.TopicName, pk.Payload)
+		return
+	}
+	logReceipt("Weather code: " + fmt.Sprint(code))
+}
