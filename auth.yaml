@@ -15,10 +15,11 @@ acl:
   - username: cryptid
     filters:
       test: 3
-      hello: 3
+      current_time: 1
       display/#: 3
       weather/#: 3
       status/#: 1
   - filters:
       '#': 0
+      current_time: 1
       status/#: 1

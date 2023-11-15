@@ -71,6 +71,9 @@ func main() {
 		}
 	}()
 
+	// Direct
+	go timePublish(server)
+
 	// Display
 	err = server.Subscribe("display/temperature", 100, receiveDisplayTemperature)
 	if err != nil {
